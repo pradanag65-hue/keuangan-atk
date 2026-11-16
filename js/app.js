@@ -220,15 +220,13 @@ $('#kb').onclick=()=>{
   const row=(g,q)=>{const x=g.map(l=>({l,q:q(l)})).filter(o=>o.q>0);return x.length?{tanggal:g[0].tanggal,ket:x.map(o=>o.l.jenis==='ATK'?o.l.ket+' ( '+o.q+' '+o.l.satuan+' )':o.l.ket).join(', '),jumlah:x.reduce((t,o)=>t+o.q*o.l.harga,0)}:null};
   const at=L.filter(l=>l.jenis==='ATK'),bl=L.filter(l=>l.jenis!=='ATK');
   const A=grp(at).map(g=>row(g,l=>l.klaim)).filter(Boolean),B=bl.map(l=>row([l],x=>x.klaim)).filter(Boolean),k=A.concat(B);
-  const t=grp(at).map(g=>row(g,l=>l.qty-l.klaim)).concat(bl.map(l=>row([l],x=>x.qty-x.klaim))).filter(Boolean).sort((x,y)=>x.tanggal.localeCompare(y.tanggal));
   const rw=a=>a.map((b,i)=>`<tr><td>${i+1}</td><td>${dm(b.tanggal)}</td><td>${esc(b.ket)}</td><td style="text-align:right">${r2(b.jumlah)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center">-</td></tr>';
   const st=(l,a)=>`<tr><td colspan="3" style="text-align:right"><b>${l}</b></td><td style="text-align:right"><b>${r2(sum(a))}</b></td></tr>`;
   const ph=grp(L).map(g=>{const r=row(g,l=>l.klaim);return r&&(g[0].foto||[]).length?Object.assign(r,{foto:g[0].foto}):null}).filter(Boolean);
   $('#doc').innerHTML=`<h2>${esc(CFG.judulLaporan||'LAPORAN PENGELUARAN OPERASIONAL UNIT TRANSPORTASI')}</h2><h2>(ATK)</h2><h2 style="margin-bottom:10px">REALISASI PERIODE ${P.txt}</h2>
 <table><tr><th style="width:36px">NO</th><th style="width:90px">TANGGAL</th><th>KETERANGAN</th><th style="width:120px">JUMLAH</th></tr>
 <tr><td><b>A</b></td><td colspan="3"><b>ATK</b></td></tr>${rw(A)}${st('SUB TOTAL',A)}
-<tr><td><b>B</b></td><td colspan="3"><b>BIAYA LAIN</b></td></tr>${rw(B)}${st('SUB TOTAL',B)}${st('TOTAL',k)}
-<tr><td><b>C</b></td><td colspan="3"><b>PEMBELIAN TIDAK DIKLAIM (tidak termasuk total di atas)</b></td></tr>${rw(t)}${st('SUB TOTAL TIDAK DIKLAIM',t)}</table>
+<tr><td><b>B</b></td><td colspan="3"><b>BIAYA LAIN</b></td></tr>${rw(B)}${st('SUB TOTAL',B)}${st('TOTAL',k)}</table>
 <table class="sg" style="margin-top:18px"><tr><td>Mengetahui,</td><td>Mengajukan,</td></tr><tr><td style="height:70px"></td><td></td></tr>
 <tr><td><b><u>${esc($('#kn1').value)}</u></b><br>${esc(((CFG.penandatangan||{}).mengetahui||{}).jabatan||'Manajer Unit Transportasi')}</td><td><b><u>${esc($('#kn2').value)}</u></b><br>${esc(((CFG.penandatangan||{}).mengajukan||{}).jabatan||'Staff Keuangan')}</td></tr></table>
 ${ph.length?`<div class="pg"><h2 style="margin-bottom:10px">LAMPIRAN DOKUMENTASI PEMBELIAN<br>PERIODE ${P.txt}</h2>`+ph.map((b,n)=>`<div style="margin-bottom:8px"><b>Lampiran ${n+1}.</b> ${dm(b.tanggal)}, ${esc(b.ket)}, ${r2(b.jumlah)}<br>`+b.foto.map(f=>`<div class="ph"><img data-id="${esc(f.id)}" alt=""><br>${new Date(f.ts).toLocaleString('id-ID',{hour12:false})}, ${f.lat==null?'lokasi tidak tersedia':f.lat.toFixed(6)+', '+f.lng.toFixed(6)}</div>`).join('')+'</div>').join('')+'</div>':''}`;
