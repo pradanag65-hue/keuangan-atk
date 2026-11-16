@@ -1,0 +1,34 @@
+{
+  "apiUrl": "",
+  "namaAplikasi": "ATK Kantor",
+  "unit": "Unit Transportasi",
+  "instansi": "Dishub DIY",
+  "judulLaporan": "LAPORAN PENGELUARAN OPERASIONAL UNIT TRANSPORTASI",
+  "penandatangan": {
+    "mengetahui": {
+      "nama": "Wahyu Saktiaji, S.E",
+      "jabatan": "Manajer Unit Transportasi"
+    },
+    "mengajukan": {
+      "nama": "Dwi Fitriyani",
+      "jabatan": "Staff Keuangan"
+    }
+  },
+  "kategori": [
+    "Kertas",
+    "Alat tulis",
+    "Map dan arsip",
+    "Perekat",
+    "Perlengkapan lain"
+  ],
+  "satuan": [
+    "pcs",
+    "rim",
+    "box",
+    "pak",
+    "buah"
+  ],
+  "refreshDetik": 30,
+  "fotoMaxPx": 1280,
+  "fotoKualitas": 0.72
+}

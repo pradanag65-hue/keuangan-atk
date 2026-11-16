@@ -1,0 +1,104 @@
+{
+  "barang": [
+    {
+      "kode": "ATK001",
+      "nama": "HVS A4",
+      "kategori": "Kertas",
+      "satuan": "rim",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK002",
+      "nama": "HVS F4",
+      "kategori": "Kertas",
+      "satuan": "rim",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK003",
+      "nama": "Bantex Odner",
+      "kategori": "Map dan arsip",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK004",
+      "nama": "Map File",
+      "kategori": "Map dan arsip",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK005",
+      "nama": "Buku Batik",
+      "kategori": "Alat tulis",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK006",
+      "nama": "Gunting",
+      "kategori": "Alat tulis",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK007",
+      "nama": "Spidol Whiteboard",
+      "kategori": "Alat tulis",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK008",
+      "nama": "Marker Putih",
+      "kategori": "Alat tulis",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK009",
+      "nama": "Snowman Kecil",
+      "kategori": "Alat tulis",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    },
+    {
+      "kode": "ATK010",
+      "nama": "Double Tape Kecil",
+      "kategori": "Perekat",
+      "satuan": "pcs",
+      "stok": 0,
+      "min": 0,
+      "lokasi": "",
+      "harga": 0
+    }
+  ]
+}

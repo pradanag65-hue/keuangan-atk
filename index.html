@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#13262b">
+<title>ATK Kantor</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;700&family=Barlow+Semi+Condensed:wght@600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+<aside>
+<div class="brand" id="brand"><b>ATK Kantor</b><span>Persediaan dan pemakaian</span></div>
+<nav id="nv"><button data-v="dash" class="on">Dashboard</button><button data-v="trx">Transaksi</button><button data-v="brg">Barang</button><button data-v="lap">Laporan</button><button data-v="klm">Klaim</button></nav>
+<div class="pinbox"><label>PIN admin (untuk ubah master dan stok masuk)</label><input id="pin" type="password" autocomplete="off"></div>
+</aside>
+<main>
+<header><h1 id="ttl">Dashboard</h1><span id="st" class="mu"></span><button id="rf">Muat ulang</button></header>
+
+<section id="v-dash">
+<div class="grid g4" style="margin-bottom:12px" id="kpi"></div>
+<div class="grid g2">
+<div class="card"><h3>Pemakaian per divisi (30 hari)</h3><div id="dv-ch"></div></div>
+<div class="card"><h3>Perlu restock</h3><div id="rs-ls"></div></div>
+</div>
+<div class="card"><h3>Aktivitas terbaru</h3><div class="tw" id="ak"></div></div>
+</section>
+
+<section id="v-trx" hidden>
+<div class="row" style="margin-bottom:12px"><button id="m1" class="on">Pengambilan</button><button id="m2">Stok masuk</button></div>
+<div id="p1" class="grid g2">
+<div class="card">
+<label>Nama pengambil</label><input id="nm" placeholder="Nama lengkap" autocomplete="name">
+<label>Divisi</label><input id="dv" placeholder="Contoh: Unit Transportasi">
+<label>Keperluan (opsional)</label><input id="kp" placeholder="Untuk apa?">
+</div>
+<div class="card">
+<label>Kode barang</label>
+<div class="row"><input id="kd" placeholder="Scan atau ketik kode, lalu Enter" autocomplete="off" style="margin:3px 0"><button id="bs">Scan</button></div>
+<div id="cam" hidden><video id="vid" playsinline muted></video><button id="bx" style="width:100%;margin-top:6px">Tutup kamera</button></div>
+<div id="sel"></div>
+<div id="form" hidden>
+<label>Jumlah</label>
+<div class="row" style="margin-bottom:10px"><button id="mn">−</button><input id="qt" type="number" min="1" value="1" inputmode="numeric" style="text-align:center;margin:0"><button id="pl">+</button></div>
+<button class="pri" id="go" style="width:100%;padding:11px">Catat pengambilan</button>
+</div>
+</div>
+</div>
+<div id="p2" class="card" hidden>
+<label>Barang</label><select id="rs"></select>
+<label>Jumlah masuk</label><input id="rj" type="number" min="1" inputmode="numeric">
+<label>Supplier atau keterangan</label><input id="rk" placeholder="Contoh: Toko Maju, nota 123">
+<button class="pri" id="rb">Catat stok masuk</button>
+</div>
+</section>
+
+<section id="v-brg" hidden>
+<div class="row" style="margin-bottom:10px"><input id="bq" placeholder="Cari nama atau kode" style="margin:0"><select id="bk" style="margin:0;width:auto"></select></div>
+<div class="card tw" id="bl"></div>
+<div class="grid g2">
+<div class="card">
+<h3>Tambah atau ubah barang</h3>
+<label>Kode (sama dengan barcode)</label><input id="fk">
+<label>Nama barang</label><input id="fn">
+<div class="grid g2" style="gap:8px"><div><label>Kategori</label><input id="fc" list="kat" placeholder="Kertas, Alat tulis…"></div><div><label>Lokasi</label><input id="fl" placeholder="Rak A1"></div></div>
+<div class="grid g3" style="gap:8px"><div><label>Satuan</label><input id="fs" list="sat" placeholder="pcs"></div><div><label>Stok</label><input id="ft" type="number" min="0"></div><div><label>Minimal</label><input id="fm" type="number" min="0"></div></div>
+<label>Harga satuan (Rp)</label><input id="fh" type="number" min="0">
+<button class="pri" id="sv" style="width:100%">Simpan barang</button>
+</div>
+<div class="card">
+<h3>Impor banyak barang</h3>
+<div class="mu" style="margin-bottom:6px">Satu baris satu barang: kode,nama,kategori,satuan,stok,minimal,lokasi,harga</div>
+<textarea id="im" rows="6" placeholder="ATK001,Pulpen hitam,Alat tulis,pcs,50,10,Rak A1,3500"></textarea>
+<label>Atau pilih file JSON (contoh: data/barang-awal.json)</label><input id="ij" type="file" accept="application/json">
+<button class="pri" id="ib" style="width:100%">Impor dari teks</button>
+</div>
+</div>
+</section>
+
+<section id="v-lap" hidden>
+<div class="card noprint"><div class="grid g4" style="gap:8px">
+<div><label>Dari</label><input id="l1" type="date"></div><div><label>Sampai</label><input id="l2" type="date"></div>
+<div><label>Jenis laporan</label><select id="lj"><option value="div">Pemakaian per divisi</option><option value="brg">Pemakaian per barang</option><option value="mut">Mutasi (semua transaksi)</option></select></div>
+<div><label>&nbsp;</label><div class="row"><button id="ex">CSV</button><button id="pr">Cetak</button></div></div>
+</div></div>
+<div class="card tw" id="lr"></div>
+<div class="mu">Laporan memakai 1.000 transaksi terakhir.</div>
+</section>
+<section id="v-klm" hidden>
+<div class="card noprint"><div class="grid g3" style="gap:8px">
+<div><label>Bulan</label><input id="km" type="month"></div>
+<div><label>Periode</label><select id="kq"><option value="1">Periode 1 (tanggal 1–15)</option><option value="2">Periode 2 (tanggal 16–akhir bulan)</option></select></div>
+<div><label>&nbsp;</label><div class="row"><button id="kb" class="pri">Buat laporan</button><button id="kc">Cetak / PDF</button></div></div>
+<div><label>Mengetahui (Manajer Unit Transportasi)</label><input id="kn1" value="Wahyu Saktiaji, S.E"></div>
+<div><label>Mengajukan (Staff Keuangan)</label><input id="kn2" value="Dwi Fitriyani"></div></div></div>
+<div class="card noprint"><h3>Catat pembelian</h3>
+<div class="grid g3" style="gap:8px"><div><label>Tanggal nota</label><input id="bt" type="date"></div>
+<div><label>Jenis</label><select id="bjn"><option>ATK</option><option>Biaya lain</option></select></div>
+<div><label>Status</label><select id="bst"><option value="Klaim">Diklaim ke Dishub</option><option value="Tidak diklaim">Tidak diklaim</option></select></div></div>
+<label>Keterangan barang</label><input id="bn" placeholder="HVS A4 ( 1 rim ), Map File ( 12 pcs )">
+<label>Jumlah (Rp)</label><input id="bj" type="number" min="0" inputmode="numeric">
+<label>Foto dokumentasi (otomatis diberi stempel waktu dan lokasi)</label>
+<div class="row" style="margin-bottom:8px"><button id="fc1">Ambil foto</button><button id="ff">Pilih file</button><input id="ffile" type="file" accept="image/*" hidden></div>
+<div id="cw" hidden><video id="cv" playsinline muted></video><div class="row" style="margin-top:6px"><button id="cj" class="pri" style="flex:1">Jepret</button><button id="cx">Batal</button></div></div>
+<div id="fph" class="row" style="flex-wrap:wrap;margin:8px 0"></div>
+<button class="pri" id="bs2" style="width:100%">Simpan pembelian</button></div>
+<div class="card noprint tw" id="kl2"></div>
+<div id="doc" hidden></div>
+</section>
+</main></div>
+<datalist id="kat"></datalist><datalist id="sat"></datalist>
+<div id="toast"></div>
+
+<script src="js/app.js"></script>
+</body></html>
