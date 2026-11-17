@@ -31,26 +31,11 @@
 </section>
 
 <section id="v-trx" hidden>
-<div class="row" style="margin-bottom:12px"><button id="m1" class="on">Pengambilan</button><button id="m2">Stok masuk</button></div>
-<div id="p1" class="grid g2">
-<div class="card">
-<label>Nama pengambil</label><input id="nm" placeholder="Nama lengkap" autocomplete="name">
-<label>Divisi</label><input id="dv" placeholder="Contoh: Unit Transportasi">
-<label>Keperluan (opsional)</label><input id="kp" placeholder="Untuk apa?">
+<div class="card row sp" style="flex-wrap:wrap">
+<div><div class="b">Form pengambilan karyawan</div><div class="mu">Bagikan tautan ini ke karyawan. Mereka hanya melihat form scan dan foto.</div></div>
+<div class="row"><button id="bo">Buka form</button><button id="cl">Salin tautan</button></div>
 </div>
-<div class="card">
-<label>Kode barang</label>
-<div class="row"><input id="kd" placeholder="Scan atau ketik kode, lalu Enter" autocomplete="off" style="margin:3px 0"><button id="bs">Scan</button></div>
-<div id="cam" hidden><video id="vid" playsinline muted></video><button id="bx" style="width:100%;margin-top:6px">Tutup kamera</button></div>
-<div id="sel"></div>
-<div id="form" hidden>
-<label>Jumlah</label>
-<div class="row" style="margin-bottom:10px"><button id="mn">−</button><input id="qt" type="number" min="1" value="1" inputmode="numeric" style="text-align:center;margin:0"><button id="pl">+</button></div>
-<button class="pri" id="go" style="width:100%;padding:11px">Catat pengambilan</button>
-</div>
-</div>
-</div>
-<div id="p2" class="grid g2" hidden>
+<div id="p2" class="grid g2">
 <div class="card">
 <label>Tanggal nota</label><input id="nt" type="date">
 <label>Toko atau supplier</label><input id="ntk" placeholder="Nama toko">
