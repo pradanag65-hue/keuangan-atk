@@ -10,7 +10,13 @@ function ls(k,v){try{if(v===undefined)return localStorage.getItem(k)||'';localSt
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(tt);tt=setTimeout(()=>t.style.display='none',2800)}
 
 async function call(x){x.pin=$('#pin').value;const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(x)});const j=await r.json();if(j.error)throw new Error(j.error);return j}
-async function load(){try{const r=await fetch(API);const j=await r.json();items=j.atk;logs=j.log;beli=j.beli||[];$('#st').textContent='Sinkron '+new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});refresh()}catch(e){$('#st').textContent='Gagal memuat data'}}
+async function load(){
+  let tx;
+  try{tx=await (await fetch(API)).text()}catch(e){$('#st').textContent='Tidak bisa menghubungi server. Cek internet dan akses web app (Anyone)';return}
+  let j;try{j=JSON.parse(tx)}catch(e){$('#st').textContent=/accounts\.google|ServiceLogin|Sign in/i.test(tx)?'Server meminta login Google. Deploy ulang dengan akses Anyone':'Server mengirim halaman error. Buka apiUrl di browser untuk melihat pesannya';return}
+  if(j.error){$('#st').textContent=j.error;return}
+  items=j.atk;logs=j.log;beli=j.beli||[];$('#st').textContent='Sinkron '+new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});refresh()
+}
 
 function setTitle(t){const w=t.split(' ');$('#ttl').innerHTML='<b>'+esc(w[0])+'</b>'+(w[1]?' '+esc(w.slice(1).join(' ')):'')}
 const TT={dash:'Dashboard',trx:'Transaksi',brg:'Master barang',lap:'Laporan',klm:'Klaim Dishub'};
