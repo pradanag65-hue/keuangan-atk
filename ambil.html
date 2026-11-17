@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2f6b3d">
+<title>Pengambilan ATK</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:ital,wght@0,700;1,300&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app" style="max-width:600px">
+<aside><div class="brand"><svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#2f6b3d"/><rect x="13" y="14" width="22" height="4" rx="2" fill="#fff"/><rect x="13" y="22" width="22" height="4" rx="2" fill="#fff"/><rect x="13" y="30" width="14" height="4" rx="2" fill="#fff"/></svg><div id="brand"><b>ATK Kantor</b><span>Form pengambilan</span></div></div></aside>
+<main>
+<header><h1><b>Ambil</b> barang</h1></header>
+<div class="mu" id="st" style="margin:-12px 0 14px"></div>
+<div id="done" class="card" hidden></div>
+<div id="main">
+<div class="card">
+<label>Kode barang</label>
+<div class="row"><input id="kd" placeholder="Scan atau ketik kode" autocomplete="off"><button id="bs">Scan</button></div>
+<div id="cam" hidden><video id="vid" playsinline muted></video><button id="bx" style="width:100%;margin-top:8px">Tutup kamera</button></div>
+<div id="sel"></div>
+</div>
+<div class="card" id="fm" hidden>
+<label>Nama pengambil</label><input id="nm" placeholder="Nama lengkap" autocomplete="name">
+<label>Bagian atau divisi</label><input id="dv" placeholder="Contoh: Unit Transportasi">
+<label>Jumlah</label>
+<div class="row" style="margin-bottom:10px"><button id="mn">−</button><input id="qt" type="number" min="1" value="1" inputmode="numeric" style="text-align:center;margin:0"><button id="pl">+</button></div>
+<label>Keperluan (opsional)</label><input id="kp" placeholder="Untuk apa?">
+</div>
+<div class="card" id="fc3" hidden>
+<h3>Foto bukti</h3>
+<div class="mu" style="margin-bottom:10px">Foto barang yang diambil. Tanggal, jam, koordinat, dan alamat lengkap ditempel otomatis di foto. Aktifkan GPS dan izinkan lokasi.</div>
+<button id="fb">Ambil foto</button><input id="ff" type="file" accept="image/*" capture="environment" hidden>
+<div id="cw" hidden style="margin-top:10px"><video id="cv" playsinline muted></video><div class="row" style="margin-top:8px"><button id="cj" class="pri" style="flex:1">Jepret</button><button id="cx">Batal</button></div></div>
+<div id="fp"></div>
+<button class="pri" id="go" style="width:100%;margin-top:16px">Catat pengambilan</button>
+</div>
+</div>
+</main></div>
+<div id="toast"></div>
+<script src="js/ambil.js"></script>
+</body></html>
