@@ -97,6 +97,16 @@ $('#go').onclick=async()=>{
   finally{busy=false;$('#go').disabled=false}
 };
 
+/* Ambil data dari Apps Script dengan pesan error yang jelas */
+async function muat(url,pick){
+  let tx;
+  try{tx=await (await fetch(url)).text()}catch(e){throw new Error('Tidak bisa menghubungi server. Periksa internet, dan pastikan akses web app Apps Script diset “Anyone”.')}
+  let j;
+  try{j=JSON.parse(tx)}catch(e){throw new Error(/accounts\.google|ServiceLogin|Sign in/i.test(tx)?'Server meminta login Google. Deploy ulang web app dengan akses “Anyone”.':'Server mengirim halaman error, bukan data. Buka apiUrl di browser untuk melihat pesannya.')}
+  if(j.error)throw new Error(j.error);
+  return pick(j);
+}
+
 /* Mulai */
 (async()=>{
   try{CFG=await (await fetch('data/config.json')).json()}catch(e){}
@@ -104,5 +114,6 @@ $('#go').onclick=async()=>{
   if(CFG.namaAplikasi){document.title='Pengambilan ATK, '+CFG.namaAplikasi;$('#brand').innerHTML='<b>'+esc(CFG.namaAplikasi)+'</b><span>Form pengambilan</span>'}
   if(!API){$('#st').textContent='Isi apiUrl di data/config.json';return}
   $('#st').textContent='Memuat daftar barang…';
-  try{items=(await (await fetch(API+'?a=barang')).json()).atk||[];$('#st').textContent=''}catch(e){$('#st').textContent='Gagal memuat daftar barang. Muat ulang halaman.'}
+  try{items=await muat(API+'?a=barang',j=>j.atk||[]);$('#st').textContent=items.length?'':'Daftar barang masih kosong. Hubungi admin.'}
+  catch(e){$('#st').textContent=e.message}
 })();
