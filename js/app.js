@@ -17,12 +17,9 @@ const TT={dash:'Dashboard',trx:'Transaksi',brg:'Master barang',lap:'Laporan',klm
 document.querySelectorAll('#nv button').forEach(b=>b.onclick=()=>{
   view=b.dataset.v;document.querySelectorAll('#nv button').forEach(x=>x.classList.toggle('on',x===b));
   Object.keys(TT).forEach(n=>$('#v-'+n).hidden=n!==view);setTitle(TT[view]);
-  if(view!=='trx')stopScan();if(view!=='trx')stopCam();refresh();
+  if(view!=='trx')stopCam();refresh();
 });
 $('#rf').onclick=load;
-$('#m1').onclick=()=>{stopCam();$('#p1').hidden=false;$('#p2').hidden=true;$('#m1').classList.add('on');$('#m2').classList.remove('on')};
-$('#m2').onclick=()=>{$('#p1').hidden=true;$('#p2').hidden=false;$('#m2').classList.add('on');$('#m1').classList.remove('on');stopScan()};
-
 /* Dashboard */
 function dash(){
   const d30=Date.now()-30*864e5,k=logs.filter(l=>l.tipe==='keluar'&&l.ts>=d30);
@@ -38,41 +35,8 @@ function dash(){
 }
 function tbl(h,r,nc){return `<table><thead><tr>${h.map((x,i)=>`<th class="${nc&&nc.includes(i)?'n':''}">${x}</th>`).join('')}</tr></thead><tbody>${r.length?r.map(x=>`<tr>${x.map((c,i)=>`<td class="${nc&&nc.includes(i)?'n':''}">${c}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${h.length}" class="mu">Belum ada data.</td></tr>`}</tbody></table>`}
 
-/* Transaksi: scan */
-function pick(code){
-  const c=String(code).trim().toLowerCase(),it=items.find(i=>String(i.kode).toLowerCase()===c);
-  if(!it){sel=null;toast('Kode “'+code+'” belum ada di master barang');renderSel();return}
-  sel=it.id;$('#kd').value=it.kode;$('#qt').value=1;renderSel();
-}
-$('#kd').onkeydown=e=>{if(e.key==='Enter'&&e.target.value.trim())pick(e.target.value)};
-function renderSel(){
-  const it=items.find(i=>i.id===sel);$('#form').hidden=!it;
-  $('#sel').innerHTML=it?`<div class="row sp" style="margin:8px 0 12px"><div><div class="b">${esc(it.nama)}</div><div class="mu">${esc(it.kode)}, ${esc(it.lokasi||'tanpa lokasi')}</div></div><div style="text-align:right"><div class="kpi"><div class="n">${it.stok}</div></div><div class="mu">${esc(it.satuan||'')}</div></div></div>`:'';
-}
-$('#mn').onclick=()=>{const q=$('#qt');q.value=Math.max(1,(+q.value||1)-1)};
-$('#pl').onclick=()=>{const q=$('#qt');q.value=(+q.value||0)+1};
-async function startScan(){
-  if(!('BarcodeDetector' in window)){toast('Browser ini belum bisa scan kamera. Ketik kode atau pakai scanner USB.');return}
-  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})}catch(e){toast('Kamera tidak diizinkan. Ketik kodenya saja.');return}
-  const v=$('#vid');v.srcObject=stream;$('#cam').hidden=false;try{await v.play()}catch(e){}
-  const det=new BarcodeDetector();scanning=true;
-  const loop=async()=>{if(!scanning)return;try{const r=await det.detect(v);if(r.length){const c=r[0].rawValue;stopScan();pick(c);return}}catch(e){}setTimeout(loop,250)};loop();
-}
-function stopScan(){scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('#cam').hidden=true}
-$('#bs').onclick=startScan;$('#bx').onclick=stopScan;
-$('#nm').value=ls('atk_nm');$('#dv').value=ls('atk_dv');
-$('#nm').oninput=e=>ls('atk_nm',e.target.value);$('#dv').oninput=e=>ls('atk_dv',e.target.value);
-
-$('#go').onclick=async()=>{
-  const nama=$('#nm').value.trim(),div=$('#dv').value.trim(),q=parseInt($('#qt').value,10),kp=$('#kp').value.trim();
-  if(!sel)return toast('Scan barang dulu');if(!nama)return toast('Isi nama pengambil');if(!(q>0))return toast('Jumlah minimal 1');
-  $('#go').disabled=true;
-  try{const it=items.find(i=>i.id===sel);
-    await call({action:'ambil',id:sel,qty:q,pengambil:nama,divisi:div,keperluan:kp});
-    toast('Tercatat: '+q+' '+(it.satuan||'')+' '+it.nama);sel=null;$('#kd').value='';$('#kp').value='';renderSel();await load()}
-  catch(e){toast(e.message||'Gagal menyimpan. Coba lagi.')}
-  finally{$('#go').disabled=false}
-};
+$('#bo').onclick=()=>open(new URL('ambil.html',location.href).href,'_blank');
+$('#cl').onclick=async()=>{const u=new URL('ambil.html',location.href).href;try{await navigator.clipboard.writeText(u);toast('Tautan disalin')}catch(e){toast(u)}};
 
 /* Barang */
 function brg(){
@@ -117,19 +81,21 @@ $('#ij').onchange=async e=>{
 function lap(){
   const a=$('#l1').value?new Date($('#l1').value).getTime():0,z=$('#l2').value?new Date($('#l2').value).getTime()+864e5:Infinity,j=$('#lj').value;
   const l=logs.filter(x=>x.ts>=a&&x.ts<z),k=l.filter(x=>x.tipe==='keluar');let h,r;
-  if(j==='mut'){h=['Waktu','Tipe','Kode','Barang','Jumlah','Divisi','Oleh/Ket','Nilai'];rows=l.map(x=>[fmt(x.ts),x.tipe,x.kode,x.nama,x.qty,x.divisi||'',x.tipe==='masuk'?x.keperluan:x.pengambil,x.nilai||0])}
+  if(j==='mut'){h=['Waktu','Tipe','Kode','Barang','Jumlah','Divisi','Oleh/Ket','Lokasi','Nilai'];rows=l.map(x=>[fmt(x.ts),x.tipe,x.kode,x.nama,x.qty,x.divisi||'',x.tipe==='masuk'?x.keperluan:x.pengambil,{t:x.alamat||'',h:'<span style="white-space:normal;display:inline-block;max-width:300px">'+esc(x.alamat||'')+'</span>'+(x.foto?' <a href="#" data-ph="'+esc(x.foto)+'">Foto</a>':'')},x.nilai||0])}
   else{const f=j==='div'?x=>x.divisi||'Tanpa divisi':x=>x.nama,g={};
     k.forEach(x=>{const n=f(x);g[n]=g[n]||{t:0,q:0,v:0};g[n].t++;g[n].q+=x.qty;g[n].v+=x.nilai||0});
     h=[j==='div'?'Divisi':'Barang','Transaksi','Jumlah','Nilai'];rows=Object.entries(g).sort((x,y)=>y[1].v-x[1].v).map(([n,v])=>[n,v.t,v.q,v.v])}
   const tot=rows.reduce((s,x)=>s+(x[x.length-1]||0),0);
-  $('#lr').innerHTML=tbl(h,rows.map(x=>x.map((c,i)=>i===x.length-1?rp(c):esc(c))).concat([['<b>Total nilai</b>'].concat(Array(h.length-2).fill('')).concat(['<b>'+rp(tot)+'</b>'])]),[h.length-1]);
+  $('#lr').innerHTML=tbl(h,rows.map(x=>x.map((c,i)=>i===x.length-1?rp(c):(c&&c.h!=null?c.h:esc(c)))).concat([['<b>Total nilai</b>'].concat(Array(h.length-2).fill('')).concat(['<b>'+rp(tot)+'</b>'])]),[h.length-1]);
   lap.h=h;
 }
 ['l1','l2','lj'].forEach(i=>$('#'+i).onchange=lap);
 $('#ex').onclick=()=>{const q=c=>'"'+String(c==null?'':c).replace(/"/g,'""')+'"';
-  const csv=[lap.h.map(q).join(',')].concat(rows.map(x=>x.map(q).join(','))).join('\n');
+  const csv=[lap.h.map(q).join(',')].concat(rows.map(x=>x.map(c=>q(c&&c.h!=null?c.t:c)).join(','))).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='laporan-atk.csv';a.click()};
 $('#pr').onclick=()=>print();
+$('#lr').onclick=async e=>{const a=e.target.closest('[data-ph]');if(!a)return;e.preventDefault();const w=open('','_blank');
+  try{const j=await (await fetch(API+'?foto='+a.dataset.ph)).json();w.document.write('<title>Foto pengambilan</title><img src="'+j.data+'" style="max-width:100%">')}catch(x){if(w)w.close();toast('Foto gagal dimuat')}};
 
 
 /* Klaim Dishub */
@@ -235,7 +201,7 @@ ${ph.length?`<div class="pg"><h2 style="margin-bottom:10px">LAMPIRAN DOKUMENTASI
   $('#doc').scrollIntoView();
 };
 $('#kc').onclick=()=>{if($('#doc').hidden)return toast('Buat laporan dulu');print()};
-function refresh(){({dash,trx:()=>{brg();renderSel();initNota()},brg,lap,klm})[view]();if(view!=='brg')brg()}
+function refresh(){({dash,trx:initNota,brg,lap,klm})[view]();if(view!=='brg')brg()}
 (async()=>{
   try{CFG=await (await fetch('data/config.json')).json()}catch(e){}
   API=CFG.apiUrl||'';
